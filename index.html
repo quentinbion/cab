@@ -157,6 +157,39 @@
   .gear-btn{background:none; border:none; color:var(--muted); font-size:15px; padding:2px 4px;}
   .stat-row{display:flex; align-items:center; justify-content:space-between; gap:10px;}
   .stat-row + .stat-row{margin-top:8px;}
+
+  .summary-item-btn{
+    width:100%; background:none; border:none; padding:0; text-align:center; cursor:pointer;
+  }
+  .summary-item-btn .value{color:var(--ok);}
+
+  .type-toggle{display:flex; gap:8px; margin-bottom:14px; background:var(--bg); border-radius:12px; padding:4px;}
+  .type-toggle button{
+    flex:1; padding:9px; border-radius:9px; border:none; background:transparent; color:var(--muted);
+    font-size:14px; font-weight:700;
+  }
+  .type-toggle button.active{background:var(--card); color:var(--text); box-shadow:var(--shadow);}
+
+  .tx-item.income .tx-amount{color:var(--ok);}
+
+  .recurring-link{
+    display:block; margin-top:10px; padding-top:10px; border-top:1px solid var(--border);
+    font-size:13px; color:var(--fixes); background:none; border-left:none; border-right:none; border-bottom:none;
+    text-align:left; width:100%;
+  }
+  .recurring-list{list-style:none; margin:0 0 14px; padding:0;}
+  .recurring-item{display:flex; align-items:center; gap:10px; padding:9px 0; border-bottom:1px solid var(--border);}
+  .recurring-item:last-child{border-bottom:none;}
+  .recurring-item .ri-label{flex:1; font-size:14px; font-weight:500;}
+  .recurring-item .ri-amount{font-weight:700; font-size:14px;}
+  .recurring-total{font-size:13px; color:var(--muted); margin-bottom:14px;}
+  .add-row{display:flex; gap:8px; margin-bottom:8px;}
+  .add-row input{
+    padding:10px 12px; border-radius:10px; border:1px solid var(--border);
+    background:var(--bg); color:var(--text); font-size:14px;
+  }
+  .add-row input.ri-label-input{flex:2;}
+  .add-row input.ri-amount-input{flex:1; min-width:0;}
 </style>
 </head>
 <body>
@@ -179,7 +212,9 @@
       <div class="summary-grid">
         <div class="summary-item">
           <div class="label">Revenu</div>
-          <input type="number" inputmode="decimal" id="incomeInput" placeholder="0">
+          <button class="summary-item-btn" id="incomeBtn">
+            <div class="value" id="incomeTotal">0 €</div>
+          </button>
         </div>
         <div class="summary-item">
           <div class="label">Dépensé</div>
@@ -238,7 +273,11 @@
 
 <div class="sheet-overlay" id="sheetOverlay">
   <div class="sheet">
-    <h2>Ajouter une transaction</h2>
+    <h2 id="sheetTitle">Ajouter une dépense</h2>
+    <div class="type-toggle" id="typeToggle">
+      <button type="button" data-type="expense" class="active">Dépense</button>
+      <button type="button" data-type="income">Revenu</button>
+    </div>
     <input class="amount-input" id="txAmount" type="number" inputmode="decimal" placeholder="0 €" autofocus>
     <div class="cat-chips" id="chips"></div>
     <div class="field">
@@ -252,6 +291,25 @@
     <div class="sheet-actions">
       <button class="btn btn-ghost" id="cancelTx">Annuler</button>
       <button class="btn btn-primary" id="saveTx">Ajouter</button>
+    </div>
+  </div>
+</div>
+
+<div class="sheet-overlay" id="recurringOverlay">
+  <div class="sheet">
+    <h2>Charges fixes récurrentes</h2>
+    <p style="font-size:13px;color:var(--muted);margin-top:-8px;margin-bottom:14px;">
+      Ajoutées une fois, elles sont comptées automatiquement dans « Coûts fixes » chaque mois, sans que tu aies besoin de les ressaisir.
+    </p>
+    <div class="recurring-total" id="recurringTotal"></div>
+    <ul class="recurring-list" id="recurringList"></ul>
+    <div class="add-row">
+      <input type="text" id="riLabel" class="ri-label-input" placeholder="Ex : Loyer, Netflix...">
+      <input type="number" inputmode="decimal" id="riAmount" class="ri-amount-input" placeholder="Montant">
+    </div>
+    <div class="sheet-actions">
+      <button class="btn btn-ghost" id="closeRecurring">Fermer</button>
+      <button class="btn btn-primary" id="addRecurring">+ Ajouter</button>
     </div>
   </div>
 </div>
@@ -313,17 +371,29 @@
     return { fixes:null, courses:null, loisirs:null, epargne:null, autre:null };
   }
 
+  function normalizeData(d){
+    if(!d.months) d.months = {};
+    if(!d.defaultBudgets) d.defaultBudgets = defaultBudgetsTemplate();
+    if(!d.recurringFixed) d.recurringFixed = [];
+    Object.keys(d.months).forEach(function(key){
+      var m = d.months[key];
+      if(!m.transactions) m.transactions = [];
+      if(!m.incomes) m.incomes = [];
+      // migration : ancien champ "income" (nombre unique) -> une entrée de revenu
+      if(m.income != null && m.incomes.length === 0){
+        m.incomes.push({ id: uid(), date: key+"-01", label: "Revenu", amount: m.income });
+      }
+      delete m.income;
+    });
+    return d;
+  }
+
   function loadData(){
     try{
       var raw = localStorage.getItem(STORAGE_KEY);
-      if(raw){
-        var d = JSON.parse(raw);
-        if(!d.months) d.months = {};
-        if(!d.defaultBudgets) d.defaultBudgets = defaultBudgetsTemplate();
-        return d;
-      }
+      if(raw) return normalizeData(JSON.parse(raw));
     }catch(e){}
-    return { version:2, months:{}, defaultBudgets: defaultBudgetsTemplate() };
+    return normalizeData({ version:2, months:{} });
   }
   function saveData(){
     localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
@@ -334,18 +404,17 @@
     return data.defaultBudgets ? data.defaultBudgets[catKey] : null;
   }
 
+  function recurringFixedTotal(){
+    return data.recurringFixed.reduce(function(s,r){ return s + r.amount; }, 0);
+  }
+
   var data = loadData();
   var current = new Date();
   current.setDate(1);
 
   function ensureMonth(key){
     if(data.months[key]) return data.months[key];
-    var keys = Object.keys(data.months).sort();
-    var last = keys.length ? data.months[keys[keys.length-1]] : null;
-    var m = {
-      income: last ? last.income : null,
-      transactions: []
-    };
+    var m = { incomes: [], transactions: [] };
     data.months[key] = m;
     saveData();
     return m;
@@ -354,11 +423,15 @@
   function getMonth(){ return ensureMonth(monthKey(current)); }
 
   function monthSpent(m, cat){
-    return m.transactions.filter(function(t){return t.category===cat;})
-                          .reduce(function(s,t){return s+t.amount;},0);
+    var manual = m.transactions.filter(function(t){return t.category===cat;})
+                                .reduce(function(s,t){return s+t.amount;},0);
+    return cat === "fixes" ? manual + recurringFixedTotal() : manual;
+  }
+  function monthIncomeTotal(m){
+    return m.incomes.reduce(function(s,i){ return s+i.amount; }, 0);
   }
   function monthTotalSpent(m){
-    return m.transactions.reduce(function(s,t){return s+t.amount;},0);
+    return CATEGORIES.reduce(function(s,c){ return s + monthSpent(m, c.key); }, 0);
   }
 
   function render(){
@@ -378,13 +451,11 @@
 
   function renderSummary(){
     var m = getMonth();
-    var incomeInput = document.getElementById("incomeInput");
-    if(document.activeElement !== incomeInput){
-      incomeInput.value = m.income != null ? m.income : "";
-    }
+    var income = monthIncomeTotal(m);
+    document.getElementById("incomeTotal").textContent = fmt(income);
     var spent = monthTotalSpent(m);
     document.getElementById("spentTotal").textContent = fmt(spent);
-    var solde = (m.income || 0) - spent;
+    var solde = income - spent;
     var soldeEl = document.getElementById("soldeTotal");
     soldeEl.textContent = fmt(solde);
     soldeEl.className = "value solde " + (solde >= 0 ? "pos" : "neg");
@@ -421,9 +492,13 @@
           '<div class="cat-amounts"><b>'+fmt(spent)+'</b>'+(budget!=null?' / '+fmt(budget):'')+'</div>'+
         '</div>'+
         '<div class="bar-bg"><div class="bar-fill" style="width:'+pct+'%; background:'+(over?"var(--danger)":c.color)+';"></div></div>'+
-        (budget!=null ? '<div class="cat-remaining">'+(budget-spent>=0?"Reste "+fmt(budget-spent):"Dépassé de "+fmt(spent-budget))+'</div>' : '');
+        (budget!=null ? '<div class="cat-remaining">'+(budget-spent>=0?"Reste "+fmt(budget-spent):"Dépassé de "+fmt(spent-budget))+'</div>' : '')+
+        (c.key === "fixes" ? '<button class="recurring-link" id="openRecurring">🔁 Gérer mes charges fixes récurrentes ('+data.recurringFixed.length+') →</button>' : '');
       list.appendChild(card);
     });
+    if(document.getElementById("openRecurring")){
+      document.getElementById("openRecurring").addEventListener("click", openRecurringSheet);
+    }
   }
 
   function allMonthKeysSorted(){ return Object.keys(data.months).sort(); }
@@ -468,11 +543,11 @@
     }
     var n = keys.length;
 
-    var withIncome = keys.filter(function(k){ return data.months[k].income; });
+    var withIncome = keys.filter(function(k){ return monthIncomeTotal(data.months[k]) > 0; });
     var savingsRate = null;
     if(withIncome.length){
       savingsRate = withIncome.reduce(function(s,k){
-        return s + (monthSpent(data.months[k], "epargne") / data.months[k].income) * 100;
+        return s + (monthSpent(data.months[k], "epargne") / monthIncomeTotal(data.months[k])) * 100;
       }, 0) / withIncome.length;
     }
 
@@ -514,30 +589,38 @@
     var m = getMonth();
     var list = document.getElementById("txList");
     list.innerHTML = "";
-    var txs = m.transactions.slice().sort(function(a,b){ return b.date.localeCompare(a.date) || b.id.localeCompare(a.id); });
-    if(txs.length === 0){
+    var entries = m.transactions.map(function(t){ return { kind:"expense", data:t }; })
+      .concat(m.incomes.map(function(i){ return { kind:"income", data:i }; }));
+    entries.sort(function(a,b){ return b.data.date.localeCompare(a.data.date) || b.data.id.localeCompare(a.data.id); });
+    if(entries.length === 0){
       list.innerHTML = '<li class="empty">Aucune transaction ce mois-ci</li>';
       return;
     }
-    txs.forEach(function(t){
-      var cat = CATEGORIES.find(function(c){return c.key===t.category;});
+    entries.forEach(function(entry){
+      var t = entry.data;
+      var isIncome = entry.kind === "income";
+      var cat = isIncome ? null : CATEGORIES.find(function(c){return c.key===t.category;});
       var li = document.createElement("li");
-      li.className = "tx-item";
+      li.className = "tx-item" + (isIncome ? " income" : "");
       var d = new Date(t.date+"T00:00:00");
       li.innerHTML =
-        '<span class="tx-dot" style="background:'+cat.color+'"></span>'+
+        '<span class="tx-dot" style="background:'+(isIncome?"var(--ok)":cat.color)+'"></span>'+
         '<div class="tx-info">'+
-          '<div class="tx-label">'+(t.label || cat.label)+'</div>'+
-          '<div class="tx-meta">'+cat.label+' · '+pad(d.getDate())+'/'+pad(d.getMonth()+1)+'</div>'+
+          '<div class="tx-label">'+(t.label || (isIncome?"Revenu":cat.label))+'</div>'+
+          '<div class="tx-meta">'+(isIncome?"Revenu":cat.label)+' · '+pad(d.getDate())+'/'+pad(d.getMonth()+1)+'</div>'+
         '</div>'+
-        '<div class="tx-amount">'+fmt(t.amount)+'</div>'+
-        '<button class="tx-del" data-id="'+t.id+'">✕</button>';
+        '<div class="tx-amount">'+(isIncome?"+":"")+fmt(t.amount)+'</div>'+
+        '<button class="tx-del" data-id="'+t.id+'" data-kind="'+entry.kind+'">✕</button>';
       list.appendChild(li);
     });
     list.querySelectorAll(".tx-del").forEach(function(btn){
       btn.addEventListener("click", function(){
         var id = btn.dataset.id;
-        m.transactions = m.transactions.filter(function(t){ return t.id !== id; });
+        if(btn.dataset.kind === "income"){
+          m.incomes = m.incomes.filter(function(i){ return i.id !== id; });
+        } else {
+          m.transactions = m.transactions.filter(function(t){ return t.id !== id; });
+        }
         saveData();
         render();
       });
@@ -552,14 +635,6 @@
   document.getElementById("nextMonth").addEventListener("click", function(){
     current.setMonth(current.getMonth()+1);
     render();
-  });
-
-  // ---- Champs résumé ----
-  document.getElementById("incomeInput").addEventListener("change", function(e){
-    var val = parseFloat(e.target.value);
-    getMonth().income = isNaN(val) ? null : val;
-    saveData();
-    renderSummary();
   });
 
   // ---- Réglages des objectifs de budget (globaux, valables pour tous les mois) ----
@@ -588,9 +663,10 @@
     render();
   });
 
-  // ---- Sheet ajout transaction ----
+  // ---- Sheet ajout transaction (dépense ou revenu) ----
   var sheetOverlay = document.getElementById("sheetOverlay");
   var selectedCat = "courses";
+  var sheetType = "expense";
 
   function buildChips(){
     var chips = document.getElementById("chips");
@@ -609,18 +685,34 @@
     });
   }
 
-  function openSheet(){
+  function setSheetType(t){
+    sheetType = t;
+    document.querySelectorAll("#typeToggle button").forEach(function(b){
+      b.classList.toggle("active", b.dataset.type === t);
+    });
+    document.getElementById("chips").style.display = t === "income" ? "none" : "flex";
+    document.getElementById("sheetTitle").textContent = t === "income" ? "Ajouter un revenu" : "Ajouter une dépense";
+    document.getElementById("saveTx").textContent = t === "income" ? "Ajouter" : "Ajouter";
+    document.getElementById("txLabel").placeholder = t === "income" ? "Ex : Salaire, remboursement, vente..." : "Ex : Carrefour, loyer, ciné...";
+  }
+  document.querySelectorAll("#typeToggle button").forEach(function(b){
+    b.addEventListener("click", function(){ setSheetType(b.dataset.type); });
+  });
+
+  function openSheet(presetType){
     document.getElementById("txAmount").value = "";
     document.getElementById("txLabel").value = "";
     document.getElementById("txDate").value = todayISO();
     selectedCat = "courses";
     buildChips();
+    setSheetType(presetType || "expense");
     sheetOverlay.classList.add("open");
     setTimeout(function(){ document.getElementById("txAmount").focus(); }, 50);
   }
   function closeSheet(){ sheetOverlay.classList.remove("open"); }
 
-  document.getElementById("fabAdd").addEventListener("click", openSheet);
+  document.getElementById("fabAdd").addEventListener("click", function(){ openSheet("expense"); });
+  document.getElementById("incomeBtn").addEventListener("click", function(){ openSheet("income"); });
   document.getElementById("cancelTx").addEventListener("click", closeSheet);
   sheetOverlay.addEventListener("click", function(e){ if(e.target === sheetOverlay) closeSheet(); });
 
@@ -633,13 +725,71 @@
     var date = document.getElementById("txDate").value || todayISO();
     var label = document.getElementById("txLabel").value.trim();
     var targetMonth = ensureMonth(date.slice(0,7));
-    targetMonth.transactions.push({ id: uid(), date: date, category: selectedCat, label: label, amount: amount });
+    if(sheetType === "income"){
+      targetMonth.incomes.push({ id: uid(), date: date, label: label, amount: amount });
+    } else {
+      targetMonth.transactions.push({ id: uid(), date: date, category: selectedCat, label: label, amount: amount });
+    }
     saveData();
     closeSheet();
     // si la transaction concerne le mois affiché ou un autre, on se replace sur son mois
     var d = new Date(date+"T00:00:00"); d.setDate(1);
     current = d;
     render();
+  });
+
+  // ---- Sheet charges fixes récurrentes ----
+  var recurringOverlay = document.getElementById("recurringOverlay");
+  function renderRecurringList(){
+    var list = document.getElementById("recurringList");
+    list.innerHTML = "";
+    if(data.recurringFixed.length === 0){
+      list.innerHTML = '<li class="empty">Aucune charge récurrente pour le moment</li>';
+    } else {
+      data.recurringFixed.forEach(function(r){
+        var li = document.createElement("li");
+        li.className = "recurring-item";
+        li.innerHTML =
+          '<span class="ri-label">'+r.label+'</span>'+
+          '<span class="ri-amount">'+fmt(r.amount)+'</span>'+
+          '<button class="tx-del" data-id="'+r.id+'">✕</button>';
+        list.appendChild(li);
+      });
+    }
+    document.getElementById("recurringTotal").textContent = "Total mensuel : " + fmt(recurringFixedTotal());
+    list.querySelectorAll(".tx-del").forEach(function(btn){
+      btn.addEventListener("click", function(){
+        data.recurringFixed = data.recurringFixed.filter(function(r){ return r.id !== btn.dataset.id; });
+        saveData();
+        renderRecurringList();
+        renderCategories();
+        renderSummary();
+        renderStats();
+      });
+    });
+  }
+  function openRecurringSheet(){
+    renderRecurringList();
+    document.getElementById("riLabel").value = "";
+    document.getElementById("riAmount").value = "";
+    recurringOverlay.classList.add("open");
+  }
+  function closeRecurringSheet(){ recurringOverlay.classList.remove("open"); }
+  document.getElementById("closeRecurring").addEventListener("click", closeRecurringSheet);
+  recurringOverlay.addEventListener("click", function(e){ if(e.target === recurringOverlay) closeRecurringSheet(); });
+  document.getElementById("addRecurring").addEventListener("click", function(){
+    var label = document.getElementById("riLabel").value.trim();
+    var amount = parseFloat(document.getElementById("riAmount").value);
+    if(!label || isNaN(amount) || amount <= 0) return;
+    data.recurringFixed.push({ id: uid(), label: label, amount: amount });
+    saveData();
+    document.getElementById("riLabel").value = "";
+    document.getElementById("riAmount").value = "";
+    renderRecurringList();
+    renderCategories();
+    renderSummary();
+    renderStats();
+    document.getElementById("riLabel").focus();
   });
 
   // ---- Menu (export / import / reset) ----
@@ -678,7 +828,7 @@
         var imported = JSON.parse(reader.result);
         if(!imported.months) throw new Error("format invalide");
         if(confirm("Remplacer toutes les données actuelles par ce fichier ?")){
-          data = imported;
+          data = normalizeData(imported);
           saveData();
           render();
         }
@@ -693,7 +843,7 @@
 
   document.getElementById("resetBtn").addEventListener("click", function(){
     if(confirm("Supprimer définitivement toutes les données du budget ?")){
-      data = { version:2, months:{}, defaultBudgets: defaultBudgetsTemplate() };
+      data = { version:2, months:{}, defaultBudgets: defaultBudgetsTemplate(), recurringFixed:[] };
       saveData();
       render();
     }
@@ -751,8 +901,7 @@
       if(text && text.trim()){
         var parsed = JSON.parse(text);
         if(parsed && parsed.months){
-          if(!parsed.defaultBudgets) parsed.defaultBudgets = defaultBudgetsTemplate();
-          data = parsed;
+          data = normalizeData(parsed);
           localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
           render();
         }
