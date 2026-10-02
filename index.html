@@ -25,7 +25,7 @@
   body{
     background:var(--bg); color:var(--text);
     font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
-    padding-bottom:90px;
+    padding-bottom:104px;
     -webkit-tap-highlight-color:transparent;
   }
   .container{max-width:520px;margin:0 auto;padding:0 16px;}
@@ -33,19 +33,16 @@
     position:sticky; top:0; z-index:10;
     background:var(--bg);
     padding:14px 16px 8px;
-    display:flex; align-items:center; justify-content:space-between;
     max-width:520px; margin:0 auto;
   }
-  .month-nav{display:flex; align-items:center; gap:10px;}
+  .month-nav{display:flex; align-items:center; justify-content:center; gap:10px;}
   .month-nav button{
     background:var(--card); border:1px solid var(--border); color:var(--text);
     width:36px;height:36px;border-radius:50%; font-size:18px; line-height:1;
     display:flex;align-items:center;justify-content:center;
   }
   .month-label{font-size:17px; font-weight:700; text-transform:capitalize; min-width:150px; text-align:center;}
-  .icon-btn{
-    background:none;border:none;color:var(--muted);font-size:22px;padding:6px;
-  }
+  .page-title{font-size:19px; font-weight:700; padding:6px 0;}
   section{margin-top:14px;}
   .card{
     background:var(--card); border-radius:var(--radius); padding:16px;
@@ -57,11 +54,6 @@
   .summary-item{text-align:center;}
   .summary-item .label{font-size:12px; color:var(--muted); margin-bottom:4px;}
   .summary-item .value{font-size:17px; font-weight:700;}
-  .summary-item input{
-    width:100%; text-align:center; font-size:17px; font-weight:700; border:none;
-    background:transparent; color:var(--text); border-bottom:1px dashed var(--border);
-    padding-bottom:2px;
-  }
   .solde.pos{color:var(--ok);} .solde.neg{color:var(--danger);}
 
   h3.section-title{font-size:13px; text-transform:uppercase; letter-spacing:.04em; color:var(--muted); margin:20px 4px 8px;}
@@ -99,10 +91,25 @@
   .empty{color:var(--muted); font-size:14px; text-align:center; padding:20px 0;}
 
   .fab{
-    position:fixed; bottom:22px; right:22px; z-index:20;
-    width:58px; height:58px; border-radius:50%; border:none;
+    position:fixed; bottom:78px; right:22px; z-index:20;
+    width:56px; height:56px; border-radius:50%; border:none;
     background:var(--fixes); color:#fff; font-size:28px; box-shadow:0 4px 14px rgba(0,0,0,.25);
   }
+
+  .tabbar{
+    position:fixed; left:0; right:0; bottom:0; z-index:25;
+    background:var(--card); border-top:1px solid var(--border);
+    display:flex; padding-bottom:env(safe-area-inset-bottom,0px);
+  }
+  .tabbar button{
+    flex:1; background:none; border:none; color:var(--muted); font-family:inherit;
+    font-size:11px; padding:8px 2px 6px; display:flex; flex-direction:column; align-items:center; gap:2px;
+  }
+  .tabbar button .tab-icon{font-size:19px; line-height:1;}
+  .tabbar button.active{color:var(--fixes);}
+
+  .page{display:none;}
+  .page.active{display:block;}
 
   .sheet-overlay{
     position:fixed; inset:0; background:rgba(0,0,0,.4); z-index:30;
@@ -132,40 +139,23 @@
     background:var(--bg); color:var(--text); font-size:15px;
   }
   .sheet-actions{display:flex; gap:10px; margin-top:6px;}
-  .btn{flex:1; padding:13px; border-radius:12px; border:none; font-size:15px; font-weight:700;}
+  .btn{flex:1; padding:13px; border-radius:12px; border:none; font-size:15px; font-weight:700; font-family:inherit;}
   .btn-primary{background:var(--fixes); color:#fff;}
   .btn-ghost{background:var(--bg); color:var(--muted); border:1px solid var(--border);}
-
-  .menu-overlay{position:fixed; inset:0; background:rgba(0,0,0,.4); z-index:30; display:none; align-items:flex-end; justify-content:center;}
-  .menu-overlay.open{display:flex;}
-  .menu-sheet{background:var(--card); width:100%; max-width:520px; border-radius:20px 20px 0 0; padding:10px; padding-bottom:calc(10px + env(safe-area-inset-bottom,0px));}
-  .menu-item{display:block; width:100%; text-align:left; padding:14px 12px; background:none; border:none; font-size:15px; color:var(--text); border-bottom:1px solid var(--border);}
-  .menu-item:last-child{border-bottom:none;}
-  .menu-item.danger{color:var(--danger);}
   input[type=file]{display:none;}
 
   .fs-banner{
-    margin:0 0 12px; padding:10px 12px; border-radius:12px; background:var(--card); border:1px solid var(--border);
+    margin:14px 0 0; padding:10px 12px; border-radius:12px; background:var(--card); border:1px solid var(--border);
     font-size:13px; color:var(--muted); display:none; align-items:center; justify-content:space-between; gap:10px;
   }
   .fs-banner.show{display:flex;}
   .fs-actions{display:flex; gap:6px; flex-shrink:0;}
-  .fs-actions button{background:var(--fixes); color:#fff; border:none; border-radius:8px; padding:7px 10px; font-size:12px; font-weight:700;}
+  .fs-actions button{background:var(--fixes); color:#fff; border:none; border-radius:8px; padding:7px 10px; font-size:12px; font-weight:700; font-family:inherit;}
   .fs-actions button.secondary{background:var(--bg); color:var(--text); border:1px solid var(--border);}
-  .section-head{display:flex; align-items:baseline; justify-content:space-between; margin:20px 4px 8px;}
-  .section-head .section-title{margin:0;}
-  .gear-btn{background:none; border:none; color:var(--muted); font-size:15px; padding:2px 4px;}
-  .stat-row{display:flex; align-items:center; justify-content:space-between; gap:10px;}
-  .stat-row + .stat-row{margin-top:8px;}
-
-  .summary-item-btn{
-    width:100%; background:none; border:none; padding:0; text-align:center; cursor:pointer;
-  }
-  .summary-item-btn .value{color:var(--ok);}
 
   .type-toggle{display:flex; gap:8px; margin-bottom:14px; background:var(--bg); border-radius:12px; padding:4px;}
   .type-toggle button{
-    flex:1; padding:9px; border-radius:9px; border:none; background:transparent; color:var(--muted);
+    flex:1; padding:9px; border-radius:9px; border:none; background:transparent; color:var(--muted); font-family:inherit;
     font-size:14px; font-weight:700;
   }
   .type-toggle button.active{background:var(--card); color:var(--text); box-shadow:var(--shadow);}
@@ -175,7 +165,7 @@
   .recurring-link{
     display:block; margin-top:10px; padding-top:10px; border-top:1px solid var(--border);
     font-size:13px; color:var(--fixes); background:none; border-left:none; border-right:none; border-bottom:none;
-    text-align:left; width:100%;
+    text-align:left; width:100%; font-family:inherit;
   }
   .recurring-list{list-style:none; margin:0 0 14px; padding:0;}
   .recurring-item{display:flex; align-items:center; gap:10px; padding:9px 0; border-bottom:1px solid var(--border);}
@@ -186,90 +176,190 @@
   .add-row{display:flex; gap:8px; margin-bottom:8px;}
   .add-row input{
     padding:10px 12px; border-radius:10px; border:1px solid var(--border);
-    background:var(--bg); color:var(--text); font-size:14px;
+    background:var(--bg); color:var(--text); font-size:14px; font-family:inherit;
   }
   .add-row input.ri-label-input{flex:2;}
   .add-row input.ri-amount-input{flex:1; min-width:0;}
+
+  .summary-item-btn{width:100%; background:none; border:none; padding:0; text-align:center; cursor:pointer; font-family:inherit;}
+  .summary-item-btn .value{color:var(--ok);}
+
+  /* ── Réglages (accordéon) ── */
+  .accordion-item{background:var(--card); border:1px solid var(--border); border-radius:14px; margin-bottom:10px; overflow:hidden;}
+  .accordion-header{display:flex; justify-content:space-between; align-items:center; padding:14px 16px; cursor:pointer; user-select:none;}
+  .accordion-header-left{display:flex; align-items:center; gap:9px;}
+  .accordion-icon{font-size:18px;}
+  .accordion-title{font-size:15px; font-weight:700;}
+  .accordion-chevron{font-size:15px; color:var(--muted); transition:transform .2s;}
+  .accordion-chevron.open{transform:rotate(180deg);}
+  .accordion-body{display:none; padding:0 16px 16px; border-top:1px solid var(--border);}
+  .accordion-body.open{display:block;}
+  .hint{font-size:13px; color:var(--muted); margin:12px 0 14px;}
+  .list-btn{display:block; width:100%; text-align:left; padding:13px 2px; background:none; border:none; border-bottom:1px solid var(--border); font-size:14px; color:var(--text); font-family:inherit;}
+  .list-btn:last-child{border-bottom:none;}
+  .list-btn.danger{color:var(--danger);}
 </style>
 </head>
 <body>
 
 <header>
-  <div class="month-nav">
+  <div class="month-nav" id="monthNavWrap">
     <button id="prevMonth" aria-label="Mois précédent">‹</button>
     <div class="month-label" id="monthLabel">—</div>
     <button id="nextMonth" aria-label="Mois suivant">›</button>
   </div>
-  <button class="icon-btn" id="openMenu" aria-label="Menu">⋯</button>
+  <div class="page-title" id="pageTitleWrap" style="display:none;">Réglages</div>
 </header>
 
 <div class="container">
 
   <div class="fs-banner" id="fsBanner"></div>
 
-  <section>
-    <div class="card">
-      <div class="summary-grid">
-        <div class="summary-item">
-          <div class="label">Revenu</div>
-          <button class="summary-item-btn" id="incomeBtn">
-            <div class="value" id="incomeTotal">0 €</div>
-          </button>
-        </div>
-        <div class="summary-item">
-          <div class="label">Dépensé</div>
-          <div class="value" id="spentTotal">0 €</div>
-        </div>
-        <div class="summary-item">
-          <div class="label">Solde</div>
-          <div class="value solde" id="soldeTotal">0 €</div>
+  <!-- ══════════════════════ PAGE : ACCUEIL ══════════════════════ -->
+  <div class="page active" id="page-accueil">
+    <section>
+      <div class="card">
+        <div class="summary-grid">
+          <div class="summary-item">
+            <div class="label">Revenu</div>
+            <button class="summary-item-btn" id="incomeBtn">
+              <div class="value" id="incomeTotal">0 €</div>
+            </button>
+          </div>
+          <div class="summary-item">
+            <div class="label">Dépensé</div>
+            <div class="value" id="spentTotal">0 €</div>
+          </div>
+          <div class="summary-item">
+            <div class="label">Solde</div>
+            <div class="value solde" id="soldeTotal">0 €</div>
+          </div>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <section class="card fun-card">
-    <div class="row">
-      <div class="cat-name">😋 Plaisirs dispo ce mois-ci</div>
-      <button class="gear-btn" id="gearFun" aria-label="Régler les objectifs">⚙️</button>
-    </div>
-    <div class="fun-amount" id="funAmount">0 €</div>
-    <div class="cat-amounts"><span id="funSpent">0 €</span> dépensés<span id="funBudgetLine"></span></div>
-    <div class="bar-bg" style="margin-top:8px;"><div class="bar-fill" id="funBar" style="background:var(--loisirs); width:0%;"></div></div>
-  </section>
+    <section class="card" id="fixedCard">
+      <div class="cat-top">
+        <div class="cat-name">🏠 Coûts fixes</div>
+        <div class="cat-amounts"><b id="fixedTotal">0 €</b></div>
+      </div>
+      <div class="cat-remaining">Géré depuis Réglages (<span id="fixedCount">0</span> charge(s) récurrente(s))</div>
+      <button class="recurring-link" id="goToFixedSettings">Gérer mes coûts fixes →</button>
+    </section>
 
-  <div class="section-head">
     <h3 class="section-title">Catégories</h3>
-    <button class="gear-btn" id="gearCategories" aria-label="Régler les objectifs">⚙️</button>
-  </div>
-  <div id="categoriesList"></div>
+    <div id="categoriesList"></div>
 
-  <h3 class="section-title">Épargne</h3>
-  <section class="card savings-card">
-    <div class="row">
-      <div>
-        <div class="cat-amounts">Ce mois-ci</div>
-        <div class="savings-total" id="savingsMonth">0 €</div>
+    <h3 class="section-title">Épargne</h3>
+    <section class="card savings-card">
+      <div class="row">
+        <div>
+          <div class="cat-amounts">Ce mois-ci</div>
+          <div class="savings-total" id="savingsMonth">0 €</div>
+        </div>
+        <div style="text-align:right;">
+          <div class="cat-amounts">Total épargné (tous les temps)</div>
+          <div class="savings-total" id="savingsAllTime">0 €</div>
+        </div>
       </div>
-      <div style="text-align:right;">
-        <div class="cat-amounts">Total épargné (tous les temps)</div>
-        <div class="savings-total" id="savingsAllTime">0 €</div>
+      <div class="cat-remaining" id="savingsObjLine" style="display:none;"></div>
+      <div class="bar-bg" id="savingsBarBg" style="margin-top:8px; display:none;"><div class="bar-fill" id="savingsBar" style="background:var(--epargne); width:0%;"></div></div>
+      <svg class="spark" id="savingsSpark" viewBox="0 0 300 44" preserveAspectRatio="none"></svg>
+    </section>
+  </div>
+
+  <!-- ══════════════════════ PAGE : TRANSACTIONS ══════════════════════ -->
+  <div class="page" id="page-transactions">
+    <h3 class="section-title">Transactions du mois</h3>
+    <section class="card">
+      <ul class="tx-list" id="txList"></ul>
+    </section>
+  </div>
+
+  <!-- ══════════════════════ PAGE : STATS ══════════════════════ -->
+  <div class="page" id="page-stats">
+    <h3 class="section-title">Statistiques</h3>
+    <section class="card" id="statsCard"></section>
+  </div>
+
+  <!-- ══════════════════════ PAGE : RÉGLAGES ══════════════════════ -->
+  <div class="page" id="page-reglages">
+
+    <div class="accordion-item">
+      <div class="accordion-header" data-acc="revenus">
+        <div class="accordion-header-left"><span class="accordion-icon">💰</span><span class="accordion-title">Revenus récurrents</span></div>
+        <span class="accordion-chevron">▾</span>
+      </div>
+      <div class="accordion-body" id="acc-revenus">
+        <p class="hint">Ajoutés une fois, comptés automatiquement chaque mois (salaire, revenu locatif...), sans ressaisie.</p>
+        <div class="recurring-total" id="incomeRecurTotal"></div>
+        <ul class="recurring-list" id="incomeRecurList"></ul>
+        <div class="add-row">
+          <input type="text" id="riIncomeLabel" class="ri-label-input" placeholder="Ex : Salaire net">
+          <input type="number" inputmode="decimal" id="riIncomeAmount" class="ri-amount-input" placeholder="Montant">
+        </div>
+        <button class="btn btn-primary" id="addIncomeRecur" style="width:100%;">+ Ajouter</button>
       </div>
     </div>
-    <svg class="spark" id="savingsSpark" viewBox="0 0 300 44" preserveAspectRatio="none"></svg>
-  </section>
 
-  <h3 class="section-title">Statistiques</h3>
-  <section class="card" id="statsCard"></section>
+    <div class="accordion-item">
+      <div class="accordion-header" data-acc="fixes">
+        <div class="accordion-header-left"><span class="accordion-icon">🏠</span><span class="accordion-title">Coûts fixes récurrents</span></div>
+        <span class="accordion-chevron">▾</span>
+      </div>
+      <div class="accordion-body" id="acc-fixes">
+        <p class="hint">Ajoutées une fois, elles sont comptées automatiquement dans « Coûts fixes » chaque mois, sans que tu aies besoin de les ressaisir.</p>
+        <div class="recurring-total" id="recurringTotal"></div>
+        <ul class="recurring-list" id="recurringList"></ul>
+        <div class="add-row">
+          <input type="text" id="riLabel" class="ri-label-input" placeholder="Ex : Loyer, Netflix...">
+          <input type="number" inputmode="decimal" id="riAmount" class="ri-amount-input" placeholder="Montant">
+        </div>
+        <button class="btn btn-primary" id="addRecurring" style="width:100%;">+ Ajouter</button>
+      </div>
+    </div>
 
-  <h3 class="section-title">Transactions</h3>
-  <section class="card">
-    <ul class="tx-list" id="txList"></ul>
-  </section>
+    <div class="accordion-item">
+      <div class="accordion-header" data-acc="objectifs">
+        <div class="accordion-header-left"><span class="accordion-icon">🎯</span><span class="accordion-title">Objectifs de budget</span></div>
+        <span class="accordion-chevron">▾</span>
+      </div>
+      <div class="accordion-body" id="acc-objectifs">
+        <p class="hint">Ces objectifs s'appliquent à tous les mois (passés et futurs), jusqu'à ce que tu les changes ici.</p>
+        <div class="field"><label>🛒 Courses</label><input type="number" inputmode="decimal" id="setCourses" placeholder="Budget mensuel"></div>
+        <div class="field"><label>😋 Loisirs</label><input type="number" inputmode="decimal" id="setLoisirs" placeholder="Budget mensuel"></div>
+        <div class="field"><label>📦 Autre</label><input type="number" inputmode="decimal" id="setAutre" placeholder="Budget mensuel"></div>
+        <div class="field"><label>💰 Épargne (objectif)</label><input type="number" inputmode="decimal" id="setEpargne" placeholder="Objectif mensuel"></div>
+        <button class="btn btn-primary" id="saveObjectifs" style="width:100%;">Enregistrer</button>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <div class="accordion-header" data-acc="donnees">
+        <div class="accordion-header-left"><span class="accordion-icon">📁</span><span class="accordion-title">Fichier &amp; données</span></div>
+        <span class="accordion-chevron">▾</span>
+      </div>
+      <div class="accordion-body" id="acc-donnees">
+        <div style="margin-top:12px;"></div>
+        <button class="list-btn" id="fsManageBtn">🔌 Connecter / gérer le fichier budget.json</button>
+        <button class="list-btn" id="exportBtn">⬇️ Exporter mes données (JSON)</button>
+        <button class="list-btn" id="importBtn">⬆️ Importer des données (JSON)</button>
+        <button class="list-btn danger" id="resetBtn">🗑️ Réinitialiser toutes les données</button>
+      </div>
+    </div>
+
+  </div>
 
 </div>
 
 <button class="fab" id="fabAdd" aria-label="Ajouter une dépense">+</button>
+
+<nav class="tabbar">
+  <button class="tab-btn active" data-tab="accueil"><span class="tab-icon">🏠</span><span>Accueil</span></button>
+  <button class="tab-btn" data-tab="transactions"><span class="tab-icon">💳</span><span>Transactions</span></button>
+  <button class="tab-btn" data-tab="stats"><span class="tab-icon">📊</span><span>Stats</span></button>
+  <button class="tab-btn" data-tab="reglages"><span class="tab-icon">⚙️</span><span>Réglages</span></button>
+</nav>
 
 <div class="sheet-overlay" id="sheetOverlay">
   <div class="sheet">
@@ -295,53 +385,6 @@
   </div>
 </div>
 
-<div class="sheet-overlay" id="recurringOverlay">
-  <div class="sheet">
-    <h2>Charges fixes récurrentes</h2>
-    <p style="font-size:13px;color:var(--muted);margin-top:-8px;margin-bottom:14px;">
-      Ajoutées une fois, elles sont comptées automatiquement dans « Coûts fixes » chaque mois, sans que tu aies besoin de les ressaisir.
-    </p>
-    <div class="recurring-total" id="recurringTotal"></div>
-    <ul class="recurring-list" id="recurringList"></ul>
-    <div class="add-row">
-      <input type="text" id="riLabel" class="ri-label-input" placeholder="Ex : Loyer, Netflix...">
-      <input type="number" inputmode="decimal" id="riAmount" class="ri-amount-input" placeholder="Montant">
-    </div>
-    <div class="sheet-actions">
-      <button class="btn btn-ghost" id="closeRecurring">Fermer</button>
-      <button class="btn btn-primary" id="addRecurring">+ Ajouter</button>
-    </div>
-  </div>
-</div>
-
-<div class="sheet-overlay" id="settingsOverlay">
-  <div class="sheet">
-    <h2>Objectifs mensuels</h2>
-    <p style="font-size:13px;color:var(--muted);margin-top:-8px;margin-bottom:14px;">
-      Ces objectifs s'appliquent à tous les mois (passés et futurs), jusqu'à ce que tu les changes ici.
-    </p>
-    <div class="field"><label>🏠 Coûts fixes</label><input type="number" inputmode="decimal" id="setFixes" placeholder="Budget mensuel"></div>
-    <div class="field"><label>🛒 Courses</label><input type="number" inputmode="decimal" id="setCourses" placeholder="Budget mensuel"></div>
-    <div class="field"><label>😋 Plaisirs</label><input type="number" inputmode="decimal" id="setLoisirs" placeholder="Budget mensuel"></div>
-    <div class="field"><label>💰 Épargne (cible)</label><input type="number" inputmode="decimal" id="setEpargne" placeholder="Objectif mensuel"></div>
-    <div class="field"><label>📦 Autre</label><input type="number" inputmode="decimal" id="setAutre" placeholder="Budget mensuel"></div>
-    <div class="sheet-actions">
-      <button class="btn btn-ghost" id="cancelSettings">Annuler</button>
-      <button class="btn btn-primary" id="saveSettings">Enregistrer</button>
-    </div>
-  </div>
-</div>
-
-<div class="menu-overlay" id="menuOverlay">
-  <div class="menu-sheet">
-    <button class="menu-item" id="settingsBtn">⚙️ Paramétrer mes objectifs de budget</button>
-    <button class="menu-item" id="fsManageBtn">📁 Connecter un fichier budget.json</button>
-    <button class="menu-item" id="exportBtn">⬇️ Exporter mes données (JSON)</button>
-    <button class="menu-item" id="importBtn">⬆️ Importer des données (JSON)</button>
-    <button class="menu-item danger" id="resetBtn">🗑️ Réinitialiser toutes les données</button>
-    <button class="menu-item" id="closeMenu">Fermer</button>
-  </div>
-</div>
 <input type="file" id="importFile" accept="application/json">
 
 <script>
@@ -349,13 +392,21 @@
   "use strict";
 
   var STORAGE_KEY = "budgetV2Data";
-  var CATEGORIES = [
+
+  var CATEGORIES_ALL = [
     { key:"fixes",   label:"Coûts fixes", color:"var(--fixes)",   icon:"🏠" },
     { key:"courses", label:"Courses",     color:"var(--courses)", icon:"🛒" },
     { key:"loisirs", label:"Loisirs",     color:"var(--loisirs)", icon:"😋" },
-    { key:"epargne", label:"Épargne",     color:"var(--epargne)", icon:"💰" },
-    { key:"autre",   label:"Autre",       color:"var(--autre)",   icon:"📦" }
+    { key:"autre",   label:"Autre",       color:"var(--autre)",   icon:"📦" },
+    { key:"epargne", label:"Épargne",     color:"var(--epargne)", icon:"💰" }
   ];
+  // Catégories que l'on peut choisir en ajoutant une dépense / qui apparaissent sur l'accueil.
+  var CATEGORIES_SPEND = CATEGORIES_ALL.filter(function(c){ return ["courses","loisirs","autre"].indexOf(c.key) >= 0; });
+  // Catégories "dépensées" entrant dans le calcul du solde et des stats (coûts fixes compris).
+  var CATEGORIES_STATS = CATEGORIES_ALL.filter(function(c){ return ["fixes","courses","loisirs","autre"].indexOf(c.key) >= 0; });
+
+  function findCat(key){ return CATEGORIES_ALL.filter(function(c){ return c.key===key; })[0]; }
+
   var MONTH_NAMES = ["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
 
   function pad(n){ return n < 10 ? "0"+n : ""+n; }
@@ -368,13 +419,18 @@
   function uid(){ return Date.now().toString(36)+Math.random().toString(36).slice(2,7); }
 
   function defaultBudgetsTemplate(){
-    return { fixes:null, courses:null, loisirs:null, epargne:null, autre:null };
+    return { courses:null, loisirs:null, autre:null, epargne:null };
   }
 
   function normalizeData(d){
     if(!d.months) d.months = {};
     if(!d.defaultBudgets) d.defaultBudgets = defaultBudgetsTemplate();
+    if(d.defaultBudgets.courses === undefined) d.defaultBudgets.courses = null;
+    if(d.defaultBudgets.loisirs === undefined) d.defaultBudgets.loisirs = null;
+    if(d.defaultBudgets.autre === undefined) d.defaultBudgets.autre = null;
+    if(d.defaultBudgets.epargne === undefined) d.defaultBudgets.epargne = null;
     if(!d.recurringFixed) d.recurringFixed = [];
+    if(!d.recurringIncome) d.recurringIncome = [];
     Object.keys(d.months).forEach(function(key){
       var m = d.months[key];
       if(!m.transactions) m.transactions = [];
@@ -393,7 +449,7 @@
       var raw = localStorage.getItem(STORAGE_KEY);
       if(raw) return normalizeData(JSON.parse(raw));
     }catch(e){}
-    return normalizeData({ version:2, months:{} });
+    return normalizeData({ version:3, months:{} });
   }
   function saveData(){
     localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
@@ -407,10 +463,14 @@
   function recurringFixedTotal(){
     return data.recurringFixed.reduce(function(s,r){ return s + r.amount; }, 0);
   }
+  function recurringIncomeTotal(){
+    return data.recurringIncome.reduce(function(s,r){ return s + r.amount; }, 0);
+  }
 
   var data = loadData();
   var current = new Date();
   current.setDate(1);
+  var currentTab = "accueil";
 
   function ensureMonth(key){
     if(data.months[key]) return data.months[key];
@@ -428,20 +488,25 @@
     return cat === "fixes" ? manual + recurringFixedTotal() : manual;
   }
   function monthIncomeTotal(m){
-    return m.incomes.reduce(function(s,i){ return s+i.amount; }, 0);
+    return m.incomes.reduce(function(s,i){ return s+i.amount; }, 0) + recurringIncomeTotal();
   }
   function monthTotalSpent(m){
-    return CATEGORIES.reduce(function(s,c){ return s + monthSpent(m, c.key); }, 0);
+    return CATEGORIES_STATS.reduce(function(s,c){ return s + monthSpent(m, c.key); }, 0);
+  }
+  // Épargne = ce qu'il reste une fois les coûts fixes et les dépenses courantes couverts.
+  function monthEpargne(m){
+    return monthIncomeTotal(m) - monthTotalSpent(m);
   }
 
   function render(){
     renderHeader();
     renderSummary();
-    renderFun();
+    renderFixedCard();
     renderCategories();
     renderSavings();
     renderStats();
     renderTx();
+    renderReglages();
   }
 
   function renderHeader(){
@@ -461,60 +526,74 @@
     soldeEl.className = "value solde " + (solde >= 0 ? "pos" : "neg");
   }
 
-  function renderFun(){
+  function renderFixedCard(){
     var m = getMonth();
-    var spent = monthSpent(m, "loisirs");
-    var budget = getBudget("loisirs");
-    document.getElementById("funSpent").textContent = fmt(spent);
-    document.getElementById("funBudgetLine").textContent = budget != null ? " sur "+fmt(budget) : " — aucun objectif défini";
-    var remaining = budget != null ? budget - spent : null;
-    document.getElementById("funAmount").textContent = remaining != null ? fmt(remaining) : "—";
-    var pct = budget ? Math.min(100, (spent/budget)*100) : 0;
-    var bar = document.getElementById("funBar");
-    bar.style.width = pct + "%";
-    bar.style.background = (remaining != null && remaining < 0) ? "var(--danger)" : "var(--loisirs)";
+    document.getElementById("fixedTotal").textContent = fmt(monthSpent(m, "fixes"));
+    document.getElementById("fixedCount").textContent = data.recurringFixed.length;
   }
 
   function renderCategories(){
     var m = getMonth();
     var list = document.getElementById("categoriesList");
     list.innerHTML = "";
-    CATEGORIES.filter(function(c){return c.key!=="loisirs";}).forEach(function(c){
+    CATEGORIES_SPEND.forEach(function(c){
       var spent = monthSpent(m, c.key);
       var budget = getBudget(c.key);
       var pct = budget ? Math.min(100, (spent/budget)*100) : (spent>0?100:0);
       var over = budget != null && spent > budget;
+      var isLoisirs = c.key === "loisirs";
       var card = document.createElement("div");
-      card.className = "card cat-card";
-      card.innerHTML =
-        '<div class="cat-top">'+
-          '<div class="cat-name"><span class="dot" style="background:'+c.color+'"></span>'+c.icon+' '+c.label+'</div>'+
-          '<div class="cat-amounts"><b>'+fmt(spent)+'</b>'+(budget!=null?' / '+fmt(budget):'')+'</div>'+
-        '</div>'+
-        '<div class="bar-bg"><div class="bar-fill" style="width:'+pct+'%; background:'+(over?"var(--danger)":c.color)+';"></div></div>'+
-        (budget!=null ? '<div class="cat-remaining">'+(budget-spent>=0?"Reste "+fmt(budget-spent):"Dépassé de "+fmt(spent-budget))+'</div>' : '')+
-        (c.key === "fixes" ? '<button class="recurring-link" id="openRecurring">🔁 Gérer mes charges fixes récurrentes ('+data.recurringFixed.length+') →</button>' : '');
+      card.className = "card cat-card" + (isLoisirs ? " fun-card" : "");
+      var html = "";
+      if(isLoisirs){
+        var remaining = budget != null ? budget - spent : null;
+        html += '<div class="cat-top"><div class="cat-name">'+c.icon+' '+c.label+'</div></div>';
+        html += '<div class="fun-amount">'+(remaining!=null?fmt(remaining):"—")+'</div>';
+        html += '<div class="cat-amounts">'+fmt(spent)+(budget!=null?' sur '+fmt(budget)+' dépensés':' dépensés — aucun objectif défini')+'</div>';
+      } else {
+        html +=
+          '<div class="cat-top">'+
+            '<div class="cat-name"><span class="dot" style="background:'+c.color+'"></span>'+c.icon+' '+c.label+'</div>'+
+            '<div class="cat-amounts"><b>'+fmt(spent)+'</b>'+(budget!=null?' / '+fmt(budget):'')+'</div>'+
+          '</div>';
+      }
+      html += '<div class="bar-bg" style="margin-top:8px;"><div class="bar-fill" style="width:'+pct+'%; background:'+(over?"var(--danger)":c.color)+';"></div></div>';
+      if(budget!=null) html += '<div class="cat-remaining">'+(budget-spent>=0?"Reste "+fmt(budget-spent):"Dépassé de "+fmt(spent-budget))+'</div>';
+      card.innerHTML = html;
       list.appendChild(card);
     });
-    if(document.getElementById("openRecurring")){
-      document.getElementById("openRecurring").addEventListener("click", openRecurringSheet);
-    }
   }
 
   function allMonthKeysSorted(){ return Object.keys(data.months).sort(); }
 
   function renderSavings(){
     var m = getMonth();
-    var thisMonth = monthSpent(m, "epargne");
+    var thisMonth = monthEpargne(m);
+    var target = getBudget("epargne");
     document.getElementById("savingsMonth").textContent = fmt(thisMonth);
 
+    var objLine = document.getElementById("savingsObjLine");
+    var barBg = document.getElementById("savingsBarBg");
+    var bar = document.getElementById("savingsBar");
+    if(target != null){
+      var diff = thisMonth - target;
+      objLine.textContent = diff >= 0 ? "Objectif atteint (+"+fmt(diff)+")" : "Objectif non atteint (−"+fmt(Math.abs(diff))+")";
+      objLine.style.display = "block";
+      barBg.style.display = "block";
+      var pct = Math.min(100, Math.max(0, (thisMonth/target)*100));
+      bar.style.width = pct + "%";
+      bar.style.background = thisMonth >= target ? "var(--ok)" : (thisMonth >= 0 ? "var(--epargne)" : "var(--danger)");
+    } else {
+      objLine.style.display = "none";
+      barBg.style.display = "none";
+    }
+
     var keys = allMonthKeysSorted();
-    var total = keys.reduce(function(s,k){ return s + monthSpent(data.months[k], "epargne"); }, 0);
+    var total = keys.reduce(function(s,k){ return s + monthEpargne(data.months[k]); }, 0);
     document.getElementById("savingsAllTime").textContent = fmt(total);
 
-    // sparkline: last up to 6 months, cumulative savings per month (bar-ish line)
     var last6 = keys.slice(-6);
-    var values = last6.map(function(k){ return monthSpent(data.months[k], "epargne"); });
+    var values = last6.map(function(k){ return monthEpargne(data.months[k]); });
     drawSpark(values);
   }
 
@@ -536,7 +615,7 @@
 
   function renderStats(){
     var card = document.getElementById("statsCard");
-    var keys = allMonthKeysSorted().filter(function(k){ return data.months[k].transactions.length > 0; });
+    var keys = allMonthKeysSorted().filter(function(k){ return data.months[k].transactions.length > 0 || data.months[k].incomes.length > 0; });
     if(keys.length === 0){
       card.innerHTML = '<div class="empty">Pas encore assez de données. Ajoute quelques transactions pour voir apparaître tes stats.</div>';
       return;
@@ -547,13 +626,13 @@
     var savingsRate = null;
     if(withIncome.length){
       savingsRate = withIncome.reduce(function(s,k){
-        return s + (monthSpent(data.months[k], "epargne") / monthIncomeTotal(data.months[k])) * 100;
+        return s + (monthEpargne(data.months[k]) / monthIncomeTotal(data.months[k])) * 100;
       }, 0) / withIncome.length;
     }
 
     var epargneTarget = getBudget("epargne");
     var epargneHit = epargneTarget != null
-      ? keys.filter(function(k){ return monthSpent(data.months[k], "epargne") >= epargneTarget; }).length
+      ? keys.filter(function(k){ return monthEpargne(data.months[k]) >= epargneTarget; }).length
       : null;
 
     var loisirsTarget = getBudget("loisirs");
@@ -561,7 +640,7 @@
       ? keys.filter(function(k){ return monthSpent(data.months[k], "loisirs") <= loisirsTarget; }).length
       : null;
 
-    var avgByCat = CATEGORIES.map(function(c){
+    var avgByCat = CATEGORIES_STATS.map(function(c){
       var avg = keys.reduce(function(s,k){ return s + monthSpent(data.months[k], c.key); }, 0) / n;
       return { c:c, avg:avg };
     });
@@ -599,15 +678,15 @@
     entries.forEach(function(entry){
       var t = entry.data;
       var isIncome = entry.kind === "income";
-      var cat = isIncome ? null : CATEGORIES.find(function(c){return c.key===t.category;});
+      var cat = isIncome ? null : findCat(t.category);
       var li = document.createElement("li");
       li.className = "tx-item" + (isIncome ? " income" : "");
       var d = new Date(t.date+"T00:00:00");
       li.innerHTML =
-        '<span class="tx-dot" style="background:'+(isIncome?"var(--ok)":cat.color)+'"></span>'+
+        '<span class="tx-dot" style="background:'+(isIncome?"var(--ok)":(cat?cat.color:"var(--autre)"))+'"></span>'+
         '<div class="tx-info">'+
-          '<div class="tx-label">'+(t.label || (isIncome?"Revenu":cat.label))+'</div>'+
-          '<div class="tx-meta">'+(isIncome?"Revenu":cat.label)+' · '+pad(d.getDate())+'/'+pad(d.getMonth()+1)+'</div>'+
+          '<div class="tx-label">'+(t.label || (isIncome?"Revenu":(cat?cat.label:"")))+'</div>'+
+          '<div class="tx-meta">'+(isIncome?"Revenu":(cat?cat.label:""))+' · '+pad(d.getDate())+'/'+pad(d.getMonth()+1)+'</div>'+
         '</div>'+
         '<div class="tx-amount">'+(isIncome?"+":"")+fmt(t.amount)+'</div>'+
         '<button class="tx-del" data-id="'+t.id+'" data-kind="'+entry.kind+'">✕</button>';
@@ -627,6 +706,59 @@
     });
   }
 
+  function renderReglages(){
+    renderRecurringList();
+    renderIncomeRecurList();
+    fillObjectifsForm();
+  }
+
+  function fillObjectifsForm(){
+    document.getElementById("setCourses").value = data.defaultBudgets.courses != null ? data.defaultBudgets.courses : "";
+    document.getElementById("setLoisirs").value = data.defaultBudgets.loisirs != null ? data.defaultBudgets.loisirs : "";
+    document.getElementById("setAutre").value = data.defaultBudgets.autre != null ? data.defaultBudgets.autre : "";
+    document.getElementById("setEpargne").value = data.defaultBudgets.epargne != null ? data.defaultBudgets.epargne : "";
+  }
+
+  // ---- Navigation onglets ----
+  function showTab(name){
+    document.querySelectorAll(".page").forEach(function(p){ p.classList.toggle("active", p.id === "page-"+name); });
+    document.querySelectorAll(".tab-btn").forEach(function(b){ b.classList.toggle("active", b.dataset.tab === name); });
+    var monthScoped = name !== "reglages";
+    document.getElementById("monthNavWrap").style.display = monthScoped ? "flex" : "none";
+    document.getElementById("pageTitleWrap").style.display = monthScoped ? "none" : "block";
+    document.getElementById("fabAdd").style.display = name === "reglages" ? "none" : "flex";
+    currentTab = name;
+  }
+  document.querySelectorAll(".tab-btn").forEach(function(b){
+    b.addEventListener("click", function(){ showTab(b.dataset.tab); });
+  });
+
+  // ---- Accordéon (page Réglages) ----
+  function openAccordionSection(name){
+    var body = document.getElementById("acc-"+name);
+    var header = document.querySelector('.accordion-header[data-acc="'+name+'"]');
+    if(!body.classList.contains("open")){
+      body.classList.add("open");
+      header.querySelector(".accordion-chevron").classList.add("open");
+    }
+  }
+  document.querySelectorAll(".accordion-header").forEach(function(h){
+    h.addEventListener("click", function(){
+      var name = h.dataset.acc;
+      var body = document.getElementById("acc-"+name);
+      var chev = h.querySelector(".accordion-chevron");
+      var open = body.classList.toggle("open");
+      chev.classList.toggle("open", open);
+    });
+  });
+  document.getElementById("goToFixedSettings").addEventListener("click", function(){
+    showTab("reglages");
+    openAccordionSection("fixes");
+    setTimeout(function(){
+      document.getElementById("acc-fixes").scrollIntoView({ behavior:"smooth", block:"start" });
+    }, 50);
+  });
+
   // ---- Navigation mois ----
   document.getElementById("prevMonth").addEventListener("click", function(){
     current.setMonth(current.getMonth()-1);
@@ -637,29 +769,14 @@
     render();
   });
 
-  // ---- Réglages des objectifs de budget (globaux, valables pour tous les mois) ----
-  var settingsOverlay = document.getElementById("settingsOverlay");
-  function openSettings(){
-    document.getElementById("setFixes").value = data.defaultBudgets.fixes != null ? data.defaultBudgets.fixes : "";
-    document.getElementById("setCourses").value = data.defaultBudgets.courses != null ? data.defaultBudgets.courses : "";
-    document.getElementById("setLoisirs").value = data.defaultBudgets.loisirs != null ? data.defaultBudgets.loisirs : "";
-    document.getElementById("setEpargne").value = data.defaultBudgets.epargne != null ? data.defaultBudgets.epargne : "";
-    document.getElementById("setAutre").value = data.defaultBudgets.autre != null ? data.defaultBudgets.autre : "";
-    settingsOverlay.classList.add("open");
-  }
-  function closeSettings(){ settingsOverlay.classList.remove("open"); }
-  document.getElementById("gearFun").addEventListener("click", openSettings);
-  document.getElementById("gearCategories").addEventListener("click", openSettings);
-  document.getElementById("cancelSettings").addEventListener("click", closeSettings);
-  settingsOverlay.addEventListener("click", function(e){ if(e.target === settingsOverlay) closeSettings(); });
-  document.getElementById("saveSettings").addEventListener("click", function(){
+  // ---- Objectifs de budget (globaux, valables pour tous les mois) ----
+  document.getElementById("saveObjectifs").addEventListener("click", function(){
     function v(id){ var val = parseFloat(document.getElementById(id).value); return isNaN(val) ? null : val; }
     data.defaultBudgets = {
-      fixes: v("setFixes"), courses: v("setCourses"), loisirs: v("setLoisirs"),
-      epargne: v("setEpargne"), autre: v("setAutre")
+      courses: v("setCourses"), loisirs: v("setLoisirs"),
+      autre: v("setAutre"), epargne: v("setEpargne")
     };
     saveData();
-    closeSettings();
     render();
   });
 
@@ -671,7 +788,7 @@
   function buildChips(){
     var chips = document.getElementById("chips");
     chips.innerHTML = "";
-    CATEGORIES.forEach(function(c){
+    CATEGORIES_SPEND.forEach(function(c){
       var b = document.createElement("button");
       b.type = "button";
       b.className = "chip" + (c.key===selectedCat ? " active" : "");
@@ -692,8 +809,7 @@
     });
     document.getElementById("chips").style.display = t === "income" ? "none" : "flex";
     document.getElementById("sheetTitle").textContent = t === "income" ? "Ajouter un revenu" : "Ajouter une dépense";
-    document.getElementById("saveTx").textContent = t === "income" ? "Ajouter" : "Ajouter";
-    document.getElementById("txLabel").placeholder = t === "income" ? "Ex : Salaire, remboursement, vente..." : "Ex : Carrefour, loyer, ciné...";
+    document.getElementById("txLabel").placeholder = t === "income" ? "Ex : prime, remboursement, vente..." : "Ex : Carrefour, ciné...";
   }
   document.querySelectorAll("#typeToggle button").forEach(function(b){
     b.addEventListener("click", function(){ setSheetType(b.dataset.type); });
@@ -738,8 +854,7 @@
     render();
   });
 
-  // ---- Sheet charges fixes récurrentes ----
-  var recurringOverlay = document.getElementById("recurringOverlay");
+  // ---- Coûts fixes récurrents (Réglages) ----
   function renderRecurringList(){
     var list = document.getElementById("recurringList");
     list.innerHTML = "";
@@ -761,22 +876,10 @@
       btn.addEventListener("click", function(){
         data.recurringFixed = data.recurringFixed.filter(function(r){ return r.id !== btn.dataset.id; });
         saveData();
-        renderRecurringList();
-        renderCategories();
-        renderSummary();
-        renderStats();
+        render();
       });
     });
   }
-  function openRecurringSheet(){
-    renderRecurringList();
-    document.getElementById("riLabel").value = "";
-    document.getElementById("riAmount").value = "";
-    recurringOverlay.classList.add("open");
-  }
-  function closeRecurringSheet(){ recurringOverlay.classList.remove("open"); }
-  document.getElementById("closeRecurring").addEventListener("click", closeRecurringSheet);
-  recurringOverlay.addEventListener("click", function(e){ if(e.target === recurringOverlay) closeRecurringSheet(); });
   document.getElementById("addRecurring").addEventListener("click", function(){
     var label = document.getElementById("riLabel").value.trim();
     var amount = parseFloat(document.getElementById("riAmount").value);
@@ -785,24 +888,49 @@
     saveData();
     document.getElementById("riLabel").value = "";
     document.getElementById("riAmount").value = "";
-    renderRecurringList();
-    renderCategories();
-    renderSummary();
-    renderStats();
+    render();
     document.getElementById("riLabel").focus();
   });
 
-  // ---- Menu (export / import / reset) ----
-  var menuOverlay = document.getElementById("menuOverlay");
-  document.getElementById("openMenu").addEventListener("click", function(){ menuOverlay.classList.add("open"); });
-  document.getElementById("closeMenu").addEventListener("click", function(){ menuOverlay.classList.remove("open"); });
-  menuOverlay.addEventListener("click", function(e){ if(e.target === menuOverlay) menuOverlay.classList.remove("open"); });
-
-  document.getElementById("settingsBtn").addEventListener("click", function(){
-    menuOverlay.classList.remove("open");
-    openSettings();
+  // ---- Revenus récurrents (Réglages) ----
+  function renderIncomeRecurList(){
+    var list = document.getElementById("incomeRecurList");
+    list.innerHTML = "";
+    if(data.recurringIncome.length === 0){
+      list.innerHTML = '<li class="empty">Aucun revenu récurrent pour le moment</li>';
+    } else {
+      data.recurringIncome.forEach(function(r){
+        var li = document.createElement("li");
+        li.className = "recurring-item";
+        li.innerHTML =
+          '<span class="ri-label">'+r.label+'</span>'+
+          '<span class="ri-amount" style="color:var(--ok)">+'+fmt(r.amount)+'</span>'+
+          '<button class="tx-del" data-id="'+r.id+'">✕</button>';
+        list.appendChild(li);
+      });
+    }
+    document.getElementById("incomeRecurTotal").textContent = "Total mensuel : " + fmt(recurringIncomeTotal());
+    list.querySelectorAll(".tx-del").forEach(function(btn){
+      btn.addEventListener("click", function(){
+        data.recurringIncome = data.recurringIncome.filter(function(r){ return r.id !== btn.dataset.id; });
+        saveData();
+        render();
+      });
+    });
+  }
+  document.getElementById("addIncomeRecur").addEventListener("click", function(){
+    var label = document.getElementById("riIncomeLabel").value.trim();
+    var amount = parseFloat(document.getElementById("riIncomeAmount").value);
+    if(!label || isNaN(amount) || amount <= 0) return;
+    data.recurringIncome.push({ id: uid(), label: label, amount: amount });
+    saveData();
+    document.getElementById("riIncomeLabel").value = "";
+    document.getElementById("riIncomeAmount").value = "";
+    render();
+    document.getElementById("riIncomeLabel").focus();
   });
 
+  // ---- Fichier & données (export / import / reset) ----
   document.getElementById("exportBtn").addEventListener("click", function(){
     var blob = new Blob([JSON.stringify(data, null, 2)], {type:"application/json"});
     var url = URL.createObjectURL(blob);
@@ -813,7 +941,6 @@
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
-    menuOverlay.classList.remove("open");
   });
 
   document.getElementById("importBtn").addEventListener("click", function(){
@@ -835,7 +962,6 @@
       }catch(err){
         alert("Fichier invalide : " + err.message);
       }
-      menuOverlay.classList.remove("open");
       e.target.value = "";
     };
     reader.readAsText(file);
@@ -843,11 +969,10 @@
 
   document.getElementById("resetBtn").addEventListener("click", function(){
     if(confirm("Supprimer définitivement toutes les données du budget ?")){
-      data = { version:2, months:{}, defaultBudgets: defaultBudgetsTemplate(), recurringFixed:[] };
+      data = { version:3, months:{}, defaultBudgets: defaultBudgetsTemplate(), recurringFixed:[], recurringIncome:[] };
       saveData();
       render();
     }
-    menuOverlay.classList.remove("open");
   });
 
   // ---- Connexion à un fichier budget.json sur l'appareil (File System Access API) ----
@@ -917,7 +1042,7 @@
     if(kind === "none"){ fsBanner.classList.remove("show"); fsBanner.innerHTML = ""; return; }
     fsBanner.classList.add("show");
     if(kind === "unsupported"){
-      fsBanner.innerHTML = '<span>Ton navigateur ne permet pas de connecter un fichier automatiquement. Utilise Exporter/Importer (menu ⋯) pour sauvegarder.</span>';
+      fsBanner.innerHTML = '<span>Ton navigateur ne permet pas de connecter un fichier automatiquement. Utilise Exporter/Importer (Réglages) pour sauvegarder.</span>';
     } else if(kind === "setup"){
       fsBanner.innerHTML =
         '<span>Connecte un fichier budget.json pour le retrouver automatiquement à l\'ouverture.</span>'+
@@ -975,7 +1100,6 @@
   }
 
   document.getElementById("fsManageBtn").addEventListener("click", function(){
-    menuOverlay.classList.remove("open");
     showBanner("setup");
     fsBanner.scrollIntoView({ behavior:"smooth", block:"center" });
   });
