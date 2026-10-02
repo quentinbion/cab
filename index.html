@@ -592,7 +592,10 @@
     var total = keys.reduce(function(s,k){ return s + monthEpargne(data.months[k]); }, 0);
     document.getElementById("savingsAllTime").textContent = fmt(total);
 
-    var last6 = keys.slice(-6);
+    // Le graphique ne montre que les mois révolus : le mois en cours n'a pas fini de compter ses dépenses/revenus.
+    var todayKey = monthKey(new Date());
+    var completedKeys = keys.filter(function(k){ return k < todayKey; });
+    var last6 = completedKeys.slice(-6);
     var values = last6.map(function(k){ return monthEpargne(data.months[k]); });
     drawSpark(values);
   }
